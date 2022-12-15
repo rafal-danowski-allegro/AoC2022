@@ -25,46 +25,46 @@ object Part2 {
             .findFirst()
             .orElse(BigInteger("-1"))
     }
-}
 
-private fun findTuningFrequency(columns: List<Int>, row: Int, possibleBeaconLocations: List<Pair<IntRange, IntRange>>): BigInteger? {
-    for (x in columns) {
-        if (isInAllRanges(x, possibleBeaconLocations)) {
-            println("Found beacon position! [$x, $row]")
-            return calculateTuningFrequency(x, row)
+    private fun findTuningFrequency(columns: List<Int>, row: Int, possibleBeaconLocations: List<Pair<IntRange, IntRange>>): BigInteger? {
+        for (x in columns) {
+            if (isInAllRanges(x, possibleBeaconLocations)) {
+                println("Found beacon position! [$x, $row]")
+                return calculateTuningFrequency(x, row)
+            }
         }
+        return null
     }
-    return null
-}
 
-private fun calculateTuningFrequency(column: Int, row: Int) =
-    BigInteger.valueOf(column.toLong()) * BigInteger.valueOf(4_000_000) + BigInteger.valueOf(row.toLong())
+    private fun calculateTuningFrequency(column: Int, row: Int) =
+        BigInteger.valueOf(column.toLong()) * BigInteger.valueOf(4_000_000) + BigInteger.valueOf(row.toLong())
 
-private fun isInAllRanges(value: Int, ranges: List<Pair<IntRange, IntRange>>): Boolean {
-    for ((leftRange, rightRange) in ranges) {
-        if (value !in leftRange && value !in rightRange) {
-            return false
+    private fun isInAllRanges(value: Int, ranges: List<Pair<IntRange, IntRange>>): Boolean {
+        for ((leftRange, rightRange) in ranges) {
+            if (value !in leftRange && value !in rightRange) {
+                return false
+            }
         }
-    }
-    return true
-}
-
-private fun Sensor.possibleBeaconRangesForRow(row: Int, maxCoordinate: Int): Pair<IntRange, IntRange> {
-    val rangeWithoutBeacons = calculateRangeWithoutBeaconForRow(row)
-    val leftEdge = rangeWithoutBeacons.first
-    val rightEdge = rangeWithoutBeacons.last
-
-    val leftRange = if (leftEdge <= 0) {
-        -1..-1
-    } else {
-        0 until leftEdge
+        return true
     }
 
-    val rightRange = if (rightEdge >= maxCoordinate) {
-        maxCoordinate + 1..maxCoordinate + 1
-    } else {
-        rightEdge + 1..maxCoordinate
-    }
+    private fun Sensor.possibleBeaconRangesForRow(row: Int, maxCoordinate: Int): Pair<IntRange, IntRange> {
+        val rangeWithoutBeacons = calculateRangeWithoutBeaconForRow(row)
+        val leftEdge = rangeWithoutBeacons.first
+        val rightEdge = rangeWithoutBeacons.last
 
-    return leftRange to rightRange
+        val leftRange = if (leftEdge <= 0) {
+            -1..-1
+        } else {
+            0 until leftEdge
+        }
+
+        val rightRange = if (rightEdge >= maxCoordinate) {
+            maxCoordinate + 1..maxCoordinate + 1
+        } else {
+            rightEdge + 1..maxCoordinate
+        }
+
+        return leftRange to rightRange
+    }
 }
